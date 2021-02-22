@@ -14,8 +14,8 @@ void init(){
 
 int main(){
     init();
-    parseFen(&pos, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
-    generateMoves(&pos, &list);
+    parseFen(&pos, "7K/8/8/8/8/3pP3/2p5/1Q1R3K w - e2 0 1");
+    generateBPMoves(&pos, &list);
 
     printBoard(&pos);
 

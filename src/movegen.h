@@ -4,6 +4,7 @@
 #include "defs.h"
 #include "movement.h"
 
-extern void generateMoves(sPosition const *pos, sMoveList *list);
+extern void generateWPMoves(sPosition const *pos, sMoveList *list);
+extern void generateBPMoves(sPosition const *pos, sMoveList *list);
 #endif
 
