@@ -1,25 +1,54 @@
 #include "board.h"
 
-const int fileRankToSquare[8][8] = {
-    {a1, a2, a3, a4, a5, a6, a7, a8},
-    {b1, b2, b3, b4, b5, b6, b7, b8},
-    {c1, c2, c3, c4, c5, c6, c7, c8},
-    {d1, d2, d3, d4, d5, d6, d7, d8},
-    {e1, e2, e3, e4, e5, e6, e7, e8},
-    {f1, f2, f3, f4, f5, f6, f7, f8},
-    {g1, g2, g3, g4, g5, g6, g7, g8},
-    {h1, h2, h3, h4, h5, h6, h7, h8}};
+int inline fileRankToSquare(int file, int rank){
+    return 8*rank+file;
+}
 
-int parseFen(sPosition *pos, char *fen) {
+void resetBoard(sPosition *pos){
+    pos->enPas = 0;
+    pos->castlePerms=0;
+    pos->side=white;
+    
+    for(int i = empty; i <= bK; i++){
+        pos->bitboards[i] = 0;
+    }
+}
+
+void updatePosition(sPosition *pos){
+    pos->material[white] = 0;
+    pos->material[black] = 0;
+
+    pos->material[white] += countBits(pos->bitboards[wP]) * pawnValue;
+    pos->material[black] += countBits(pos->bitboards[bP]) * pawnValue;
+
+    pos->material[white] += countBits(pos->bitboards[wN]) * knightValue;
+    pos->material[black] += countBits(pos->bitboards[bN]) * knightValue;
+
+    pos->material[white] += countBits(pos->bitboards[wB]) * bishopValue;
+    pos->material[black] += countBits(pos->bitboards[bB]) * bishopValue;
+
+    pos->material[white] += countBits(pos->bitboards[wR]) * rookValue;
+    pos->material[black] += countBits(pos->bitboards[bR]) * rookValue;
+
+    pos->material[white] += countBits(pos->bitboards[wQ]) * queenValue;
+    pos->material[black] += countBits(pos->bitboards[bQ]) * queenValue;
+
+    pos->allPieces[white] = pos->bitboards[wP]|pos->bitboards[wN]|pos->bitboards[wB]|pos->bitboards[wR]|pos->bitboards[wQ]|pos->bitboards[wK];
+    pos->allPieces[black] = pos->bitboards[bP]|pos->bitboards[bN]|pos->bitboards[bB]|pos->bitboards[bR]|pos->bitboards[bQ]|pos->bitboards[bK];
+
+    pos->ocupied = pos->allPieces[white]|pos->allPieces[black];
+    pos->empty = ~pos->ocupied;
+}
+
+boolean parseFen(sPosition *pos, char *fen) {
 
 	ASSERT(fen!=NULL);
 	ASSERT(pos!=NULL);
-    int boardindex = 0;
-    
+    int  rank = rank8;
+    int  file = fileA;
+	resetBoard(pos);
 
-	//ResetBoard(pos);
-
-	while ((boardindex < 64) && *fen) {
+	while ((rank >= rank1) && *fen) {
         int  piece = 0;
 	    int count = 1;
 		switch (*fen) {
@@ -50,22 +79,26 @@ int parseFen(sPosition *pos, char *fen) {
 
             case '/':
             case ' ':
+                rank--;
+                file = fileA;
                 fen++;
                 continue;
 
             default:
                 printf("FEN error \n");
-                return 0;
+                return FALSE;
         }
 
 		for (int i = 0; i < count; i++) {
-            int sq = boardindex++;
-            addToBitboard(&pos->bitboards[piece], sq);
+            if(piece != empty){
+                int sq = fileRankToSquare(file, rank);
+                addToBitboard(&pos->bitboards[piece], sq);
+            }
+            file++;
         }
 		fen++;
 	}
-    fen++;
-    
+
 	ASSERT(*fen == 'w' || *fen == 'b');
 
     if(*fen == 'w'){
@@ -81,32 +114,39 @@ int parseFen(sPosition *pos, char *fen) {
             break;
         }
 		switch(*fen) {
-			case 'K': pos->castlePerm |= wkCastle; break;
-			case 'Q': pos->castlePerm |= wqCastle; break;
-			case 'k': pos->castlePerm |= bkCastle; break;
-			case 'q': pos->castlePerm |= bqCastle; break;
+			case 'K': pos->castlePerms |= wkCastle; break;
+			case 'Q': pos->castlePerms |= wqCastle; break;
+			case 'k': pos->castlePerms |= bkCastle; break;
+			case 'q': pos->castlePerms |= bqCastle; break;
 			default: break;
         }
 		fen++;
 	}
 	fen++;
 
-	ASSERT(pos->castlePerm>=0 && pos->castlePerm <= 15);
+	ASSERT(pos->castlePerms>=0 && pos->castlePerms <= 15);
 
 	if (*fen != '-') {
         int file, rank = 0;
 		file = fen[0] - 'a';
 		rank = fen[1] - '1';
+        fen+=3;
 
 		ASSERT(file>=fileA && file <= fileH);
 		ASSERT(rank>=rank1 && rank <= rank8);
-
-		addToBitboard(&pos->enPas, fileRankToSquare[file][rank]);
+		addToBitboard(&pos->enPas, fileRankToSquare(file, rank));
+    }else{
+        fen+=2;
     }
 
 	//pos->posKey = GeneratePosKey(pos);
 
-	//UpdateListsMaterial(pos);
+	updatePosition(pos);
 
-	return 1;
+	return TRUE;
+}
+
+U64 inline allBoards(sPosition *pos){
+    return pos->bitboards[wP]|pos->bitboards[wN]|pos->bitboards[wB]|pos->bitboards[wR]|pos->bitboards[wQ]|pos->bitboards[wK]|
+        pos->bitboards[bP]|pos->bitboards[bN]|pos->bitboards[bB]|pos->bitboards[bR]|pos->bitboards[bQ]|pos->bitboards[bK];
 }

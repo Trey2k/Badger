@@ -1,10 +1,19 @@
 #ifndef BOARD_H
 #define BOARD_H
-#include "constants.h"
+#include "defs.h"
 #include "bitboards.h"
 
-extern const int fileRankToSquare[8][8];
+/************************
+    External Functions
+*************************/
+extern int fileRankToSquare(int file, int rank);
+extern boolean parseFen(sPosition *pos, char *fen);
+extern U64 allBoards(sPosition *pos);
 
-extern int parseFen(sPosition *pos, char *fen);
+/************************
+    Internal Functions
+*************************/
+
+static void resetBoard(sPosition *pos);
 
 #endif
