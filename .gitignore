@@ -54,3 +54,4 @@ dkms.conf
 #custom ignores
 build/
 .vscode/
+Badger
