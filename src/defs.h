@@ -62,7 +62,9 @@ exit(1); \
 #define rank5Mask 0xFF00000000ull
 #define rank8Mask 0xFF00000000000000ull
 
-#define fullMask 0xFFFFFFFFFFFFFFFF
+#define knightSpanMask 0xA1100110Aull
+#define kingSpanMask 0x70507ull
+
 
 /****************
     Type Defs
