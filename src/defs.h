@@ -31,6 +31,7 @@ exit(1); \
 *************/
 
 #define maxPositionMoves 218
+#define maxGameMoves 2048
 
 #define pawnValue 100
 #define knightValue 325
@@ -108,6 +109,15 @@ typedef enum {FALSE, TRUE} boolean;
     STRUCTS
 ****************/
 
+typedef struct{
+    U64 enPas;
+
+    int move;
+    int castlePerms;
+    int fiftyMove;
+
+} sHistory;
+
 typedef struct {
     U64 bitboards[13];
     U64 allPieces[2];
@@ -120,6 +130,11 @@ typedef struct {
 
     int side;
     int castlePerms;
+    int fiftyMove;
+    int ply;
+    int hisPly;
+
+    sHistory history[maxGameMoves];
 
 } sPosition;
 

@@ -69,8 +69,9 @@ char pieceToChar(const int piece) {
     }
 }
 
-void printBoard(sPosition *pos){
-    printf("\n   ________________________\n");
+void printBoard(sPosition *pos, char *label){
+    printf("\n%s:\n", label);
+    printf("   ________________________\n");
     for(int rank = rank8; rank >= rank1; rank--) {
         printf("%d |", rank+1);
         for(int file = fileA; file <= fileH; file++) {

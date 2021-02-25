@@ -6,5 +6,5 @@ extern char *squareToString(const int sq);
 extern char *moveToString(const int move);
 extern char pieceToChar(const int piece);
 
-extern void printBoard(sPosition *pos);
+extern void printBoard(sPosition *pos, char *label);
 #endif

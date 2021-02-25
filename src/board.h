@@ -10,6 +10,8 @@ extern int fileRankToSquare(int file, int rank);
 extern boolean parseFen(sPosition *pos, char *fen);
 extern U64 allBoards(sPosition *pos);
 
+extern void updatePosition(sPosition *pos);
+
 /************************
     Internal Functions
 *************************/

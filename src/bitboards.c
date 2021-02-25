@@ -31,7 +31,7 @@ int trailingZero(U64 bitboard) {
   return count; 
 } 
 
-int getPieceAtSquare(sPosition *pos, int sq){
+int getPieceAtSquare(sPosition const *pos, int sq){
     for(int i = wP; i <= bK; i++){
         if(((U64)1 << sq) & pos->bitboards[i]){
             return i;

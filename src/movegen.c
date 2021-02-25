@@ -48,7 +48,6 @@ U64 dAndAntiDMoves(U64 s, sPosition const *pos){
 	return (possibilitiesDiagonal&diagonalMasks8[(s/8) + (s%8)]) | (possibilitiesAntiDiagonal&antiDiagonalMasks8[(s /8) + 7 - (s %8)]);
 }
 
-
 void generateWPMoves(sPosition const *pos, sMoveList *list){
     if(pos->side==black){
         return;
@@ -58,13 +57,14 @@ void generateWPMoves(sPosition const *pos, sMoveList *list){
     U64 possibleMove = pawnMoves&~(pawnMoves-(U64)1);
     while(possibleMove != 0){
         int index = trailingZero(possibleMove);
+        int capturedPiece = getPieceAtSquare(pos, index);
         if(possibleMove&rank8Mask){
-            list->moves[list->count++].move=toMove(index-7, index, 0, wQ, 0);
-            list->moves[list->count++].move=toMove(index-7, index, 0, wN, 0);
-            list->moves[list->count++].move=toMove(index-7, index, 0, wB, 0);
-            list->moves[list->count++].move=toMove(index-7, index, 0, wR, 0);
+            list->moves[list->count++].move=toMove(index-7, index, capturedPiece, wQ, 0);
+            list->moves[list->count++].move=toMove(index-7, index, capturedPiece, wN, 0);
+            list->moves[list->count++].move=toMove(index-7, index, capturedPiece, wB, 0);
+            list->moves[list->count++].move=toMove(index-7, index, capturedPiece, wR, 0);
         }else{
-            list->moves[list->count++].move=toMove(index-7, index, 0, 0, moveFlagCAP);
+            list->moves[list->count++].move=toMove(index-7, index, capturedPiece, 0, 0);
         }
 
         pawnMoves&=~possibleMove;
@@ -75,13 +75,14 @@ void generateWPMoves(sPosition const *pos, sMoveList *list){
     possibleMove = pawnMoves&~(pawnMoves-(U64)1);
     while(possibleMove != 0){
         int index = trailingZero(possibleMove);
+        int capturedPiece = getPieceAtSquare(pos, index);
         if(possibleMove&rank8Mask){
-            list->moves[list->count++].move=toMove(index-9, index, 0, wQ, 0);
-            list->moves[list->count++].move=toMove(index-9, index, 0, wN, 0);
-            list->moves[list->count++].move=toMove(index-9, index, 0, wB, 0);
-            list->moves[list->count++].move=toMove(index-9, index, 0, wR, 0);
+            list->moves[list->count++].move=toMove(index-9, index, capturedPiece, wQ, 0);
+            list->moves[list->count++].move=toMove(index-9, index, capturedPiece, wN, 0);
+            list->moves[list->count++].move=toMove(index-9, index, capturedPiece, wB, 0);
+            list->moves[list->count++].move=toMove(index-9, index, capturedPiece, wR, 0);
         }else{
-            list->moves[list->count++].move=toMove(index-9, index, 0, 0, moveFlagCAP);
+            list->moves[list->count++].move=toMove(index-9, index, capturedPiece, 0, 0);
         }
         
         pawnMoves&=~possibleMove;
@@ -120,7 +121,8 @@ void generateWPMoves(sPosition const *pos, sMoveList *list){
         possibleMove = pawnMoves&~(pawnMoves-(U64)1);
         while(possibleMove != 0){
             int index = trailingZero(possibleMove);
-            list->moves[list->count++].move=toMove(index-7, index, 0, 0, moveFlagEP);
+            int capturedPiece = getPieceAtSquare(pos, trailingZero(pos->enPas));
+            list->moves[list->count++].move=toMove(index-7, index, capturedPiece, 0, moveFlagEP);
             
             pawnMoves&=~possibleMove;
             possibleMove=pawnMoves&~(pawnMoves-(U64)1);
@@ -130,7 +132,8 @@ void generateWPMoves(sPosition const *pos, sMoveList *list){
         possibleMove = pawnMoves&~(pawnMoves-(U64)1);
         while(possibleMove != 0){
             int index = trailingZero(possibleMove);
-            list->moves[list->count++].move=toMove(index-9, index, 0, 0, moveFlagEP);
+            int capturedPiece = getPieceAtSquare(pos, trailingZero(pos->enPas));
+            list->moves[list->count++].move=toMove(index-9, index, capturedPiece, 0, moveFlagEP);
             
             pawnMoves&=~possibleMove;
             possibleMove=pawnMoves&~(pawnMoves-(U64)1);
@@ -147,13 +150,14 @@ void generateBPMoves(sPosition const *pos, sMoveList *list){
     U64 possibleMove = pawnMoves&~(pawnMoves-(U64)1);
     while(possibleMove != 0){
         int index = trailingZero(possibleMove);
+        int capturedPiece = getPieceAtSquare(pos, index);
         if(possibleMove&rank1Mask){
-            list->moves[list->count++].move=toMove(index+7, index, 0, bQ, 0);
-            list->moves[list->count++].move=toMove(index+7, index, 0, bN, 0);
-            list->moves[list->count++].move=toMove(index+7, index, 0, bB, 0);
-            list->moves[list->count++].move=toMove(index+7, index, 0, bR, 0);
+            list->moves[list->count++].move=toMove(index+7, index, capturedPiece, bQ, 0);
+            list->moves[list->count++].move=toMove(index+7, index, capturedPiece, bN, 0);
+            list->moves[list->count++].move=toMove(index+7, index, capturedPiece, bB, 0);
+            list->moves[list->count++].move=toMove(index+7, index, capturedPiece, bR, 0);
         }else{
-            list->moves[list->count++].move=toMove(index+7, index, 0, 0, moveFlagCAP);
+            list->moves[list->count++].move=toMove(index+7, index, capturedPiece, 0, 0);
         }
 
         pawnMoves&=~possibleMove;
@@ -164,13 +168,14 @@ void generateBPMoves(sPosition const *pos, sMoveList *list){
     possibleMove = pawnMoves&~(pawnMoves-(U64)1);
     while(possibleMove != 0){
         int index = trailingZero(possibleMove);
+        int capturedPiece = getPieceAtSquare(pos, index);
         if(possibleMove&rank1Mask){
-            list->moves[list->count++].move=toMove(index+9, index, 0, bQ, 0);
-            list->moves[list->count++].move=toMove(index+9, index, 0, bN, 0);
-            list->moves[list->count++].move=toMove(index+9, index, 0, bB, 0);
-            list->moves[list->count++].move=toMove(index+9, index, 0, bR, 0);
+            list->moves[list->count++].move=toMove(index+9, index, capturedPiece, bQ, 0);
+            list->moves[list->count++].move=toMove(index+9, index, capturedPiece, bN, 0);
+            list->moves[list->count++].move=toMove(index+9, index, capturedPiece, bB, 0);
+            list->moves[list->count++].move=toMove(index+9, index, capturedPiece, bR, 0);
         }else{
-            list->moves[list->count++].move=toMove(index+9, index, 0, 0, moveFlagCAP);
+            list->moves[list->count++].move=toMove(index+9, index, capturedPiece, 0, 0);
         }
         
         pawnMoves&=~possibleMove;
@@ -209,7 +214,8 @@ void generateBPMoves(sPosition const *pos, sMoveList *list){
         possibleMove = pawnMoves&~(pawnMoves-(U64)1);
         while(possibleMove != 0){
             int index = trailingZero(possibleMove);
-            list->moves[list->count++].move=toMove(index+7, index, 0, 0, moveFlagEP);
+            int capturedPiece = getPieceAtSquare(pos, trailingZero(pos->enPas));
+            list->moves[list->count++].move=toMove(index+7, index, capturedPiece, 0, moveFlagEP);
             
             pawnMoves&=~possibleMove;
             possibleMove=pawnMoves&~(pawnMoves-(U64)1);
@@ -219,7 +225,8 @@ void generateBPMoves(sPosition const *pos, sMoveList *list){
         possibleMove = pawnMoves&~(pawnMoves-(U64)1);
         while(possibleMove != 0){
             int index = trailingZero(possibleMove);
-            list->moves[list->count++].move=toMove(index+9, index, 0, 0, moveFlagEP);
+            int capturedPiece = getPieceAtSquare(pos, trailingZero(pos->enPas));
+            list->moves[list->count++].move=toMove(index+7, index, capturedPiece, 0, moveFlagEP);
             
             pawnMoves&=~possibleMove;
             possibleMove=pawnMoves&~(pawnMoves-(U64)1);
@@ -254,7 +261,9 @@ void generateNMoves(sPosition const *pos, sMoveList *list){
         U64 move=possibility&~(possibility-(U64)1);
         while (move != 0){
             U64 toIndex=trailingZero(move);
-            list->moves[list->count++].move = toMove(index, toIndex, 0, 0, 0);
+            int capturedPiece = getPieceAtSquare(pos, toIndex);
+
+            list->moves[list->count++].move = toMove(index, toIndex, capturedPiece, 0, 0);
             possibility&=~move;
             move=possibility&~(possibility-(U64)1);
         }
@@ -290,7 +299,10 @@ void generateKMoves(sPosition const *pos, sMoveList *list){
         U64 move=possibility&~(possibility-(U64)1);
         while (move != 0){
             U64 toIndex=trailingZero(move);
-            list->moves[list->count++].move = toMove(index, toIndex, 0, 0, 0);
+            int moveflag = 0;
+            int capturedPiece = getPieceAtSquare(pos, toIndex);
+
+            list->moves[list->count++].move = toMove(index, toIndex, capturedPiece, 0, 0);
             possibility&=~move;
             move=possibility&~(possibility-(U64)1);
         }
@@ -315,12 +327,13 @@ void generateBMoves(sPosition const *pos, sMoveList *list){
     {
         U64 iLocation=trailingZero(i);
         possibility=dAndAntiDMoves(iLocation, pos)&NotMe;
-        printBitBoard(possibility);
         U64 j=possibility&~(possibility-(U64)1);
         while (j != 0)
         {
             U64 index=trailingZero(j);
-            list->moves[list->count++].move = toMove(iLocation, index, 0, 0, 0);
+            int capturedPiece = getPieceAtSquare(pos, index);
+
+            list->moves[list->count++].move = toMove(iLocation, index, capturedPiece, 0, 0);
             possibility&=~j;
             j=possibility&~(possibility-(U64)1);
         }
@@ -345,12 +358,13 @@ void generateRMoves(sPosition const *pos, sMoveList *list){
     {
         U64 iLocation=trailingZero(i);
         possibility=hAndVMoves(iLocation, pos)&NotMe;
-        printBitBoard(possibility);
         U64 j=possibility&~(possibility-(U64)1);
         while (j != 0)
         {
             U64 index=trailingZero(j);
-            list->moves[list->count++].move = toMove(iLocation, index, 0, 0, 0);
+            int capturedPiece = getPieceAtSquare(pos, index);
+
+            list->moves[list->count++].move = toMove(iLocation, index, capturedPiece, 0, 0);
             possibility&=~j;
             j=possibility&~(possibility-(U64)1);
         }
@@ -375,12 +389,14 @@ void generateQMoves(sPosition const *pos, sMoveList *list){
     {
         U64 iLocation=trailingZero(i);
         possibility=hAndVMoves(iLocation, pos)&NotMe|dAndAntiDMoves(iLocation, pos)&NotMe;
-        printBitBoard(possibility);
         U64 j=possibility&~(possibility-(U64)1);
         while (j != 0)
         {
             U64 index=trailingZero(j);
-            list->moves[list->count++].move = toMove(iLocation, index, 0, 0, 0);
+            int capturedPiece = 0;
+            capturedPiece = getPieceAtSquare(pos, index);
+
+            list->moves[list->count++].move = toMove(iLocation, index, capturedPiece, 0, 0);
             possibility&=~j;
             j=possibility&~(possibility-(U64)1);
         }
@@ -390,6 +406,7 @@ void generateQMoves(sPosition const *pos, sMoveList *list){
 }
 
 void generateAllMoves(sPosition const *pos, sMoveList *list){
+    list->count=0;
     generateWPMoves(pos, list);
     generateBPMoves(pos, list);
     generateNMoves(pos, list);

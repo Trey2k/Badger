@@ -19,4 +19,7 @@ extern int getTo(int move);
 extern int getCapture(int move);
 extern int getPromoted(int move);
 extern int toMove(int from, int to, int capture, int promotion, int flag);
+
+extern boolean makeMove(sPosition *pos, int move);
+extern void undoMove(sPosition *pos);
 #endif

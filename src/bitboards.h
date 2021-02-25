@@ -13,7 +13,7 @@ extern void removeFromBitboard(U64 *bitboard, int sq);
 extern void addToBitboard(U64 *bitboard, int sq);
 extern int countBits(U64 bitboard);
 extern int trailingZero(U64 bitboard);
-extern int getPieceAtSquare(sPosition *pos, int sq);
+extern int getPieceAtSquare(sPosition const *pos, int sq);
 
 extern void printBitBoard(U64 bitboard);
 
