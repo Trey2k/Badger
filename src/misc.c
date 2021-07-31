@@ -1,6 +1,7 @@
 #include "misc.h"
 
-#ifdef WIN32
+// Sys dep stuff for time
+#ifdef _WIN32
 #include "windows.h"
 #else
 #include "sys/time.h"
@@ -10,7 +11,7 @@
 #endif
 
 int getTimeMs() {
-    #ifdef WIN32
+    #ifdef _WIN32
     return GetTickCount();
     #else
     struct timeval t;
